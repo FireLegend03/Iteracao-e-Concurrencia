@@ -1,0 +1,21 @@
+% act declara as ações
+act car, up, ccross, dw;
+act train, green, tcross, red;
+act tau_;
+
+% proc declara os nossos processos
+proc Road = car . up . ccross . dw . Road;
+proc Rail = train . green . tcross. red . Rail;
+proc Signal = green . red . Signal + up . dw. Signal;
+
+% As ações do sistema que são permitidas são mencionadas no primeiro argumento do allow
+% C = ( Road | Rail | Signal)\{green,red,up,dw}
+
+C = allow({car, train, ccross, tcross, tau_},
+    comm({green| green -> tau_,
+          red| red -> tau_,
+          dw| dw -> tau_,
+          up| up -> tau_},
+    Road  || Rail || Signal));
+
+init C;
